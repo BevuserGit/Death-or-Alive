@@ -55,6 +55,21 @@
       width: 0%; height: 100%;
       background: linear-gradient(to right, pink, red);
     }
+    @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+@keyframes shake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
   </style>
 </head>
 <body>
@@ -62,7 +77,15 @@
   <div class="screen" id="creditSplash"> <h2>Created by Vincë Creation</h2> </div>
 
   <div class="screen" id="nameInput">
-    <h4>One choice. One fate. Death or Alive!</h4><br>
+    <h4 style="
+  font-family: 'Creepster', cursive;
+  color: #8B0000;
+  text-shadow: 2px 2px 5px black;
+  font-size: 1.8em;
+  animation: shake 1.5s infinite;
+">
+  One choice. One fate. Death or Alive!
+</h4><br>
     <p>Enter your name, challenger:</p>
     <input type="text" id="playerName" placeholder="Enter your name" />
     <button onclick="startStory()">Continue</button>
