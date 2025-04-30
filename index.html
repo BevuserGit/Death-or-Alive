@@ -62,6 +62,7 @@
   <div class="screen" id="creditSplash"> <h2>Created by Vincë Creation</h2> </div>
 
   <div class="screen" id="nameInput">
+    <h2>Welcome for the game Death or Alive!</h2>
     <p>Enter your name, challenger:</p>
     <input type="text" id="playerName" placeholder="Enter your name" />
     <button onclick="startStory()">Continue</button>
@@ -153,7 +154,7 @@
 
   function showMechanics() {
     hideAll(); screens.mechanics.style.display = 'flex';
-    guideText.innerText = `Here are the rules:\nEach level gives 4 doors. Behind one is a meme, others may not be so innocent...\nYou can't pause. You can't go back.\nFinish all 5 levels to escape.`;
+    guideText.innerText = `Here are the rules:\nEach level gives 4 doors. Behind one is a meme, others may not escape...\nYou can't pause. You can't go back.\nFinish all 5 levels to escape.`;
   }
 
   function skipToWarning() {
@@ -162,7 +163,7 @@
 
   function showWarning() {
     hideAll(); screens.warning.style.display = 'flex';
-    warningText.innerText = `WARNING, ${playerName}:\nThis game contains adult themes and psychological traps. If you're not ready, turn back now.\nIf you proceed, you agree to complete all 5 levels.`;
+    warningText.innerText = `WARNING, ${playerName}:\nThis game contains psychological traps. If you're not ready, turn back now.\nIf you proceed, you agree to complete all 5 levels.`;
   }
 
   function startGame() {
