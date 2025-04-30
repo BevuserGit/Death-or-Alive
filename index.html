@@ -266,11 +266,55 @@ font-size: 1.8em;">
   }
 
   function endGame() {
-    hideAll(); screens.resultScreen.style.display = 'flex';
-    if (hornyScore >= 4.5) resultMessage.innerText = `${playerName}, your lust consumed you. You failed.`;
-    else if (hornyScore <= 0.5) resultMessage.innerText = `${playerName}, calm and controlled. You passed.`;
-    else resultMessage.innerText = `${playerName}, tempted yet balanced. Interesting...`;
+  hideAll();
+  screens.resultScreen.style.display = 'flex';
+  
+  let finalMessage = "";
+  
+  if (hornyScore >= 4.5) {
+    finalMessage = `${playerName}, your lust consumed you. You failed.`;
+  } else if (hornyScore <= 0.5) {
+    finalMessage = `${playerName}, calm and controlled. You passed.`;
+  } else {
+    finalMessage = `${playerName}, tempted yet balanced. Interesting...`;
   }
+  
+  resultMessage.innerText = finalMessage;
+  
+  setTimeout(() => {
+    resultMessage.innerText = "Heh... do you really think it's over?";
+    setTimeout(() => {
+      resultMessage.innerText = "3...";
+      setTimeout(() => {
+        resultMessage.innerText = "2...";
+        setTimeout(() => {
+          resultMessage.innerText = "1...";
+          setTimeout(() => {
+            playFinalVideo();
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    }, 1500);
+  }, 4000);
+}
+function playFinalVideo() {
+  hideAll();
+  videoContainer.style.display = 'flex';
+  videoPlayer.src = "m5.mp4";
+  videoPlayer.controls = false;
+  videoPlayer.muted = false;
+  videoPlayer.play();
+  
+  videoPlayer.onended = () => {
+    videoPlayer.pause();
+    videoPlayer.currentTime = 0;
+    videoContainer.style.display = 'none';
+    
+    hideAll();
+    screens.resultScreen.style.display = 'flex';
+    resultMessage.innerText = `You gave up... but you survived.\nCongratulations, ${playerName}. You are... still alive. For now.`;
+  };
+}
 
   function hideAll() {
     Object.values(screens).forEach(screen => screen.style.display = 'none');
