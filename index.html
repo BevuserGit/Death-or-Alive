@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Death or Alive</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: black;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+    .screen {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none; justify-content: center; align-items: center;
+      background: black; color: white;
+      flex-direction: column; padding: 20px;
+      text-align: center; z-index: 10;
+    }
+    .fade { animation: fadeIn 2s ease-in-out forwards; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    button {
+      padding: 12px 24px; margin-top: 20px;
+      background: red; border: none; color: white;
+      font-size: 1.2em; border-radius: 8px; cursor: pointer;
+    }
+    .doors {
+      display: flex; gap: 20px; flex-wrap: wrap;
+      justify-content: center; align-items: center;
+    }
+    .door {
+      font-size: 3em; cursor: pointer;
+      background: transparent; border: none;
+    }
+    .video-container {
+      position: absolute; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      display: none; justify-content: center; align-items: center;
+      background: black; z-index: 20;
+    }
+    video {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain;
+    }
+    #hornyBar {
+      width: 80%; height: 20px; background: #333;
+      border-radius: 10px; overflow: hidden;
+      margin-top: 20px; border: 1px solid white;
+    }
+    #hornyFill {
+      width: 0%; height: 100%;
+      background: linear-gradient(to right, pink, red);
+    }
+  </style>
+</head>
+<body>
+  <div class="screen fade" id="titleSplash"> <h1>DEATH or ALIVE</h1> </div>
+  <div class="screen" id="creditSplash"> <h2>Created by Vincë Creation</h2> </div>
+
+  <div class="screen" id="nameInput">
+    <p>Enter your name, challenger:</p>
+    <input type="text" id="playerName" placeholder="Enter your name" />
+    <button onclick="startStory()">Continue</button>
+  </div>
+
+  <div class="screen" id="introStory">
+    <p id="storyText"></p>
+    <button onclick="showMechanics()">Next</button>
+    <button onclick="skipToWarning()" style="background: gray;">Skip</button>
+  </div>
+
+  <div class="screen" id="mechanics">
+    <p id="guideText"></p>
+    <button onclick="showWarning()">Proceed</button>
+  </div>
+
+  <div class="screen" id="warning">
+    <p id="warningText"></p>
+    <button onclick="startGame()">Start Now</button>
+  </div>
+
+  <div class="screen" id="gameplay">
+    <h2 id="levelLabel"></h2>
+    <div class="doors" id="doorContainer"></div>
+    <div id="hornyBar"><div id="hornyFill"></div></div>
+  </div>
+
+  <div class="screen" id="resultScreen">
+    <h2 id="resultMessage"></h2>
+  </div>
+
+  <div class="video-container" id="videoContainer">
+    <video id="doorVideo" autoplay playsinline></video>
+  </div>
+
+  <div class="screen" id="doorModal">
+    <p>Are you sure? You may regret this choice...</p>
+    <button onclick="confirmDoor()">Proceed</button>
+    <button onclick="cancelDoor()" style="background: gray;">Cancel</button>
+  </div>
+
+  <script>
+  const screens = {
+    titleSplash: document.getElementById('titleSplash'),
+    creditSplash: document.getElementById('creditSplash'),
+    nameInput: document.getElementById('nameInput'),
+    introStory: document.getElementById('introStory'),
+    mechanics: document.getElementById('mechanics'),
+    warning: document.getElementById('warning'),
+    gameplay: document.getElementById('gameplay'),
+    resultScreen: document.getElementById('resultScreen'),
+    doorModal: document.getElementById('doorModal'),
+  };
+
+  const playerInput = document.getElementById('playerName');
+  const storyText = document.getElementById('storyText');
+  const guideText = document.getElementById('guideText');
+  const warningText = document.getElementById('warningText');
+  const levelLabel = document.getElementById('levelLabel');
+  const doorContainer = document.getElementById('doorContainer');
+  const resultMessage = document.getElementById('resultMessage');
+  const videoContainer = document.getElementById('videoContainer');
+  const videoPlayer = document.getElementById('doorVideo');
+  const hornyFill = document.getElementById('hornyFill');
+
+  const sensual = ["video/s1.mp4", "video/s2.mp4", "video/s3.mp4", "video/s4.mp4", "video/s5.mp4"];
+  const memes = ["video/m1.mp4", "video/m2.mp4", "video/m3.mp4", "video/m4.mp4", "video/m5.mp4"];
+
+  let playerName = "", level = 0, hornyScore = 0, currentChoices = [];
+  let selectedDoor = null;
+
+  window.onload = () => {
+    screens.titleSplash.style.display = 'flex';
+    setTimeout(() => {
+      screens.titleSplash.style.display = 'none';
+      screens.creditSplash.style.display = 'flex';
+      setTimeout(() => {
+        screens.creditSplash.style.display = 'none';
+        screens.nameInput.style.display = 'flex';
+      }, 3000);
+    }, 3000);
+  };
+
+  function startStory() {
+    playerName = playerInput.value || "Player";
+    hideAll(); screens.introStory.style.display = 'flex';
+    storyText.innerText = `Welcome, ${playerName}... You were chosen. You don't remember anything, but the voice in the dark whispered your name. You awoke in a room lit only by doors. You're trapped in this place, and there's only one way forward: through the game. Make your choices, ${playerName}, but be warned... temptation comes at a cost.`;
+  }
+
+  function showMechanics() {
+    hideAll(); screens.mechanics.style.display = 'flex';
+    guideText.innerText = `Here are the rules:\nEach level gives 4 doors. Behind one is a meme, others may not be so innocent...\nYou can't pause. You can't go back.\nFinish all 5 levels to escape.`;
+  }
+
+  function skipToWarning() {
+    hideAll(); showWarning();
+  }
+
+  function showWarning() {
+    hideAll(); screens.warning.style.display = 'flex';
+    warningText.innerText = `WARNING, ${playerName}:\nThis game contains adult themes and psychological traps. If you're not ready, turn back now.\nIf you proceed, you agree to complete all 5 levels.`;
+  }
+
+  function startGame() {
+    level = 0; hornyScore = 0;
+    updateHornyBar();
+    nextRound();
+  }
+
+  function nextRound() {
+    hideAll(); screens.gameplay.style.display = 'flex';
+    levelLabel.innerText = `LEVEL ${level + 1}`;
+    currentChoices = generateChoicesForLevel(level);
+    doorContainer.innerHTML = '';
+    currentChoices.forEach((_, i) => {
+      const btn = document.createElement('div');
+      btn.className = 'door';
+      btn.innerText = '🚪';
+      btn.onclick = () => openDoorModal(i);
+      doorContainer.appendChild(btn);
+    });
+  }
+
+  function generateChoicesForLevel(levelIndex) {
+    const choices = [];
+    const sVid = sensual[levelIndex];
+    const mVid = memes[levelIndex];
+
+    // Ensure at least one meme and one sensual
+    const types = ["sensual", "sensual", "meme", "sensual"];
+    for (let i = 0; i < 4; i++) {
+      const type = types.sort(() => 0.5 - Math.random())[i];
+      choices.push({
+        type,
+        src: type === 'sensual' ? sVid : mVid
+      });
+    }
+    return choices;
+  }
+
+  function openDoorModal(index) {
+    selectedDoor = index;
+    screens.doorModal.style.display = 'flex';
+  }
+
+  function confirmDoor() {
+    screens.doorModal.style.display = 'none';
+    playVideo(currentChoices[selectedDoor]);
+  }
+
+  function cancelDoor() {
+    screens.doorModal.style.display = 'none';
+  }
+
+  function playVideo(choice) {
+    hideAll(); videoContainer.style.display = 'flex';
+    videoPlayer.src = choice.src;
+    videoPlayer.controls = false;
+    videoPlayer.muted = false;
+    videoPlayer.play();
+
+    if (choice.type === 'sensual') hornyScore += 1;
+    else if (choice.type === 'meme') hornyScore -= 0.5;
+
+    updateHornyBar();
+
+    videoPlayer.onended = () => {
+      videoPlayer.pause();
+      videoPlayer.currentTime = 0;
+      videoContainer.style.display = 'none';
+
+      level++;
+      if (level >= 5) endGame();
+      else nextRound();
+    };
+  }
+
+  function updateHornyBar() {
+    let score = Math.min(Math.max(hornyScore, 0), 5);
+    hornyFill.style.width = (score * 20) + "%";
+  }
+
+  function endGame() {
+    hideAll(); screens.resultScreen.style.display = 'flex';
+    if (hornyScore >= 4.5) resultMessage.innerText = `${playerName}, your lust consumed you. You failed.`;
+    else if (hornyScore <= 0.5) resultMessage.innerText = `${playerName}, calm and controlled. You passed.`;
+    else resultMessage.innerText = `${playerName}, tempted yet balanced. Interesting...`;
+  }
+
+  function hideAll() {
+    Object.values(screens).forEach(screen => screen.style.display = 'none');
+  }
+
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('keydown', e => {
+    if (['Escape', 'F11'].includes(e.key)) e.preventDefault();
+  });
+  videoPlayer.addEventListener('seeking', () => { videoPlayer.currentTime = 0; });
+  videoPlayer.addEventListener('pause', () => { videoPlayer.play(); });
+</script>
+</body>
+</html>
